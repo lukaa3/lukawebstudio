@@ -199,40 +199,60 @@
      Pricing (white)
      ========================================================= */
   .pricing { background: var(--white); }
-  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; align-items: stretch; }
-  .plan {
-    position: relative;
-    display: flex; flex-direction: column;
-    background: var(--white);
+  .package {
+    display: grid; grid-template-columns: 1fr 1.15fr;
+    max-width: 1080px; margin: 0 auto;
     border: 1px solid var(--slate-200);
-    border-radius: var(--radius);
-    padding: 40px 32px 32px;
-    box-shadow: var(--shadow);
-    transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 30px 60px -24px rgba(15, 23, 42, .28);
   }
-  .plan:hover { transform: scale(1.02); box-shadow: var(--shadow-lg); }
-  .plan-desc { margin-top: 10px; color: var(--slate-500); font-size: .98rem; }
-  .price { display: flex; align-items: baseline; gap: 6px; margin-top: 28px; padding-bottom: 28px; border-bottom: 1px solid var(--slate-200); }
-  .price strong { font-size: 3rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
-  .price span { color: var(--slate-500); font-weight: 500; }
-  .plan ul { margin: 28px 0 36px; }
+  .package-main {
+    display: flex; flex-direction: column;
+    padding: 48px 44px;
+    color: var(--white);
+    background:
+      radial-gradient(520px 320px at 100% 0%, rgba(37, 99, 235, .3), transparent 65%),
+      var(--midnight);
+  }
+  .package-main h3 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.025em; }
+  .package-sub { margin-top: 10px; color: var(--slate-400); }
+  .package-price { margin-top: 30px; }
+  .package-price .build { display: flex; align-items: baseline; gap: 10px; }
+  .package-price .build strong { font-size: clamp(3rem, 6vw, 4rem); font-weight: 800; letter-spacing: -0.045em; line-height: 1; }
+  .package-price .build span { color: var(--slate-400); font-weight: 500; }
+  .package-price .care { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; padding: 7px 14px; border-radius: 999px; background: rgba(59, 130, 246, .16); color: #93c5fd; font-weight: 600; font-size: .95rem; }
+
+  .schedule { list-style: none; margin: 34px 0 36px; padding: 0; display: grid; gap: 0; }
+  .schedule li { position: relative; display: grid; grid-template-columns: 28px 1fr; column-gap: 16px; row-gap: 2px; padding-bottom: 22px; }
+  .schedule li:last-child { padding-bottom: 0; }
+  .schedule li::before {
+    content: ""; grid-row: 1 / span 2; margin-top: 4px;
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 3px solid var(--blue-bright); background: var(--midnight);
+    justify-self: center;
+  }
+  .schedule li:not(:last-child)::after {
+    content: ""; position: absolute; left: 13px; top: 22px; bottom: 2px;
+    width: 2px; background: rgba(255,255,255,.14);
+  }
+  .schedule strong { font-size: 1.05rem; font-weight: 700; }
+  .schedule span { grid-column: 2; color: var(--slate-400); font-size: .95rem; }
+  .package-main .btn { margin-top: auto; padding: 17px 24px; font-size: 1.05rem; }
+  .package-fine { margin-top: 14px; text-align: center; font-size: .88rem; color: var(--slate-400); }
+
+  .package-features { background: var(--white); padding: 48px 44px; }
+  .package-features h4 { margin: 0 0 24px; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.01em; }
+  .package-features ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+  .package-features li { display: flex; gap: 12px; align-items: flex-start; }
   .check {
     flex: none; width: 22px; height: 22px; margin-top: 2px;
     border-radius: 50%; background: var(--blue-soft);
     display: grid; place-items: center;
   }
   .check svg { width: 13px; height: 13px; }
-  .plan .btn { margin-top: auto; }
-
-  .plan-popular { border: 2px solid var(--blue); box-shadow: 0 20px 40px -12px rgba(37, 99, 235, .28); }
-  .plan-popular:hover { box-shadow: 0 26px 50px -12px rgba(37, 99, 235, .36); }
-  .badge {
-    position: absolute; top: -14px; left: 32px;
-    background: var(--blue); color: var(--white);
-    font-size: .8rem; font-weight: 600;
-    padding: 6px 14px; border-radius: 999px;
-  }
-  .pricing-note { margin-top: 44px; text-align: center; color: var(--slate-500); }
+  .package-features li.care-item { margin-top: 6px; padding: 18px; border-radius: var(--radius); background: #eff6ff; border: 1px solid #bfdbfe; }
+  .package-features li.care-item b { color: var(--blue); }
 
   /* =========================================================
      Portfolio (dark blue)
@@ -351,11 +371,10 @@
   .fg-icon svg { width: 24px; height: 24px; }
   .fg-scope { display: block; margin-top: 4px; font-size: .88rem; font-weight: 500; color: var(--slate-500); }
   .fg-scope.is-care { color: var(--blue); font-weight: 600; }
-  .feature-group ul, .plan ul { list-style: none; padding: 0; display: grid; gap: 14px; }
+  .feature-group ul { list-style: none; padding: 0; display: grid; gap: 14px; }
   .feature-group ul { margin: 0; }
-  .feature-group li, .plan li { display: flex; gap: 12px; align-items: flex-start; }
+  .feature-group li { display: flex; gap: 12px; align-items: flex-start; }
   .feature-group li small { display: block; color: var(--slate-500); font-size: .88rem; }
-  .plan-lead { font-weight: 600; color: var(--slate-700); }
 
   /* =========================================================
      FAQ (white)
@@ -403,8 +422,8 @@
      ========================================================= */
   @media (max-width: 1023px) {
     .hero-grid, .contact-grid { gap: 48px; }
-    .pricing-grid, .work-grid { gap: 20px; }
-    .plan { padding: 36px 24px 26px; }
+    .work-grid { gap: 20px; }
+    .package-main, .package-features { padding: 40px 30px; }
     .work-grid { grid-template-columns: repeat(2, 1fr); }
     .included-grid { gap: 20px; }
     .feature-group { padding: 28px 24px; }
@@ -456,7 +475,7 @@
     .nav-menu .btn { margin-top: 12px; }
 
     .hero { padding: 64px 0 88px; }
-    .hero-grid, .included-grid, .pricing-grid, .work-grid, .contact-grid, .form-row { grid-template-columns: 1fr; }
+    .hero-grid, .included-grid, .package, .work-grid, .contact-grid, .form-row { grid-template-columns: 1fr; }
     .feature-group:hover { transform: none; }
     .faq-item summary { padding: 18px 20px; font-size: 1rem; }
     .faq-item p { padding: 0 20px 20px; }
@@ -465,8 +484,8 @@
     .hero-visual { padding-bottom: 0; }
     .update-log { position: relative; right: auto; width: 92%; margin: -32px 0 0 auto; }
 
-    .pricing-grid { gap: 32px; }
-    .plan:hover, .work-card:hover { transform: none; }
+    .package-main, .package-features { padding: 36px 22px; }
+    .work-card:hover { transform: none; }
 
     .contact-grid { gap: 48px; }
     .form-card { padding: 28px 20px; }
@@ -573,7 +592,7 @@
         <article class="feature-group">
           <div class="fg-top">
             <span class="fg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="13" height="10" rx="2"/><rect x="15" y="9" width="6" height="11" rx="1.5"/><path d="M7 18h5"/></svg></span>
-            <div><h3>Custom Design &amp; Mobile Layout</h3><span class="fg-scope">Every website</span></div>
+            <div><h3>Custom Design &amp; Mobile Layout</h3><span class="fg-scope">Initial build</span></div>
           </div>
           <ul>
             <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>100% custom-designed, responsive site optimized for phones, tablets, and desktops</span></li>
@@ -583,7 +602,7 @@
         <article class="feature-group">
           <div class="fg-top">
             <span class="fg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
-            <div><h3>Domain, Hosting &amp; Security</h3><span class="fg-scope">Every website</span></div>
+            <div><h3>Domain, Hosting &amp; Security</h3><span class="fg-scope">Initial build</span></div>
           </div>
           <ul>
             <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Guided domain connection setup. You keep 100% ownership of your domain</span></li>
@@ -594,10 +613,10 @@
         <article class="feature-group">
           <div class="fg-top">
             <span class="fg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>
-            <div><h3>Local Search &amp; Lead Capture</h3><span class="fg-scope">Every website</span></div>
+            <div><h3>Local Search &amp; Lead Capture</h3><span class="fg-scope">Initial build</span></div>
           </div>
           <ul>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>SEO foundation and Google Business Profile integration with an embedded map and local layout<small>Included with the Standard Business Site</small></span></li>
+            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>SEO foundation and Google Business Profile integration with an embedded map and local layout</span></li>
             <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Lead capture forms with instant email notifications sent straight to your inbox</span></li>
           </ul>
         </article>
@@ -620,56 +639,43 @@
   <section class="section pricing" id="pricing">
     <div class="container">
       <div class="section-head">
-        <h2>Simple, upfront pricing</h2>
-        <p>One price to build your site, plus an optional monthly plan that keeps it fast, secure, and up to date.</p>
+        <h2>One package. Everything included.</h2>
+        <p>A complete website for your business, plus ongoing care so it stays fast, secure, and up to date.</p>
       </div>
 
-      <div class="pricing-grid">
-        <article class="plan">
-          <h3>Starter Landing Page</h3>
-          <p class="plan-desc">One clean page that tells customers who you are and how to reach you.</p>
-          <div class="price"><strong>$399</strong><span>one-time</span></div>
-          <ul>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Custom single-page site</span></li>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Mobile-responsive on every screen</span></li>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Lead capture form with email alerts</span></li>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Domain connection, hosting &amp; SSL setup</span></li>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>30 days of minor post-launch revisions</span></li>
-          </ul>
-          <a href="#contact" class="btn btn-outline btn-block">Choose Starter</a>
-        </article>
+      <article class="package">
+        <div class="package-main">
+          <h3>Complete Business Website &amp; Care</h3>
+          <p class="package-sub">Designed, built, hosted, and maintained for you.</p>
 
-        <article class="plan plan-popular">
-          <span class="badge">Most popular</span>
-          <h3>Standard Business Site</h3>
-          <p class="plan-desc">A full website with room for every service you offer, built to show up in local search.</p>
-          <div class="price"><strong>$1,000</strong><span>one-time</span></div>
-          <ul>
-            <li class="plan-lead">Everything in Starter, plus:</li>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>3–5 custom pages (Home, Services, About, Contact)</span></li>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>SEO foundation for local search</span></li>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Google Business Profile &amp; embedded map</span></li>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Optimized for phones, tablets &amp; desktops</span></li>
-          </ul>
-          <a href="#contact" class="btn btn-primary btn-block">Choose Standard</a>
-        </article>
+          <div class="package-price">
+            <div class="build"><strong>$1,000</strong><span>initial build</span></div>
+            <div class="care">+ $49/mo Care Plan</div>
+          </div>
 
-        <article class="plan">
-          <h3>Monthly Care Plan</h3>
-          <p class="plan-desc">We look after your site every month so you never have to think about it.</p>
-          <div class="price"><strong>$49</strong><span>/ month</span></div>
-          <ul>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Hosting management</span></li>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>SSL certificate kept active</span></li>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Privacy Policy &amp; Terms kept up to date</span></li>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Text, phone number &amp; photo updates</span></li>
-            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>24/7 uptime monitoring &amp; maintenance</span></li>
-          </ul>
-          <a href="#contact" class="btn btn-outline btn-block">Add a care plan</a>
-        </article>
-      </div>
+          <ol class="schedule" aria-label="Payment schedule">
+            <li><strong>$500 deposit</strong><span>50% to begin design &amp; build</span></li>
+            <li><strong>$500 balance</strong><span>50% upon preview approval &amp; launch</span></li>
+            <li><strong>$49/mo Care Plan</strong><span>Recurring subscription starts 30 days after launch</span></li>
+          </ol>
 
-      <p class="pricing-note">Every project starts with a free demo mockup. Pay 50% to start and 50% when your site goes live.</p>
+          <a href="#contact" class="btn btn-primary btn-block">Get Started — Claim Your Site</a>
+          <p class="package-fine">Starts with a free demo mockup. No commitment until you approve it.</p>
+        </div>
+
+        <div class="package-features">
+          <h4>What's included</h4>
+          <ul>
+            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Custom 3–5 page mobile-responsive website</span></li>
+            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Guided domain connection setup (100% client domain ownership)</span></li>
+            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Ultra-fast cloud web hosting &amp; included SSL security (HTTPS)</span></li>
+            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Local search setup &amp; embedded Google Maps integration</span></li>
+            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Lead capture contact form with instant email notifications</span></li>
+            <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>First 30 days of free minor revisions post-launch</span></li>
+            <li class="care-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Ongoing Care Plan ($49/mo):</b> Unlimited text, phone, and photo updates + hosting maintenance</span></li>
+          </ul>
+        </div>
+      </article>
     </div>
   </section>
 
@@ -706,7 +712,7 @@
             <div class="t-hero"><span class="t-title">Strength coaching that fits your week</span><span class="t-line"></span><span class="t-btn">Book a session</span></div>
             <div class="t-grid"><i></i><i></i><i></i></div>
           </div>
-          <figcaption><strong>Coach Maya Fitness</strong><span>Personal trainer · Landing page</span></figcaption>
+          <figcaption><strong>Coach Maya Fitness</strong><span>Personal trainer · 3-page website</span></figcaption>
         </figure>
 
         <figure class="work-card">
@@ -757,7 +763,7 @@
         </details>
         <details class="faq-item">
           <summary>How does payment work?</summary>
-          <p>You pay 50% to get started and the remaining 50% when your site is finished and ready to go live. The Care Plan is billed monthly after launch.</p>
+          <p>You pay 50% to get started and the remaining 50% when your site is finished and ready to go live. The $49/mo Care Plan starts 30 days after launch.</p>
         </details>
         <details class="faq-item">
           <summary>What if I want changes after my site launches?</summary>
