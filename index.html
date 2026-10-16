@@ -340,6 +340,37 @@
   .form-fine { margin-top: 14px; text-align: center; font-size: .87rem; color: var(--slate-500); }
   .hp { position: absolute; left: -9999px; }
 
+  /* Submit button loading state */
+  .btn .spinner {
+    display: none; width: 18px; height: 18px; border-radius: 50%;
+    border: 2.5px solid rgba(255,255,255,.35); border-top-color: #fff;
+    animation: spin .7s linear infinite;
+  }
+  .btn.is-loading { pointer-events: none; opacity: .85; }
+  .btn.is-loading .spinner { display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Form status messages */
+  .form-status { display: none; margin-bottom: 22px; border-radius: var(--radius); padding: 18px 20px; gap: 14px; align-items: flex-start; }
+  .form-status.is-visible { display: flex; animation: statusIn .45s var(--ease) both; }
+  .form-status .status-icon { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; }
+  .form-status .status-icon svg { width: 22px; height: 22px; }
+  .form-status strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+  .form-status p { margin-top: 2px; font-size: .95rem; }
+  .form-status.is-success {
+    background:
+      radial-gradient(280px 140px at 100% 0%, rgba(59,130,246,.35), transparent 70%),
+      var(--midnight);
+    color: var(--white);
+    box-shadow: 0 0 0 1px rgba(96,165,250,.35), 0 18px 36px -18px rgba(37,99,235,.6);
+  }
+  .form-status.is-success .status-icon { background: var(--blue); box-shadow: 0 0 0 6px rgba(59,130,246,.2); }
+  .form-status.is-success p { color: var(--slate-300); }
+  .form-status.is-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+  .form-status.is-error .status-icon { background: #fee2e2; }
+  .form-status.is-error a { color: #991b1b; font-weight: 600; }
+  @keyframes statusIn { from { opacity: 0; transform: translateY(-8px) scale(.98); } to { opacity: 1; transform: none; } }
+
 
   /* =========================================================
      What's included (light slate)
@@ -789,7 +820,9 @@
           Web3Forms (default): get a free access key at web3forms.com and paste it into the access_key value below.
           Formspree: change the action to https://formspree.io/f/YOUR_FORM_ID and delete the access_key and subject inputs.
         -->
-        <form action="https://api.web3forms.com/submit" method="POST">
+        <form id="mockup-form" action="https://api.web3forms.com/submit" method="POST">
+          <div id="form-status" class="form-status" role="status" aria-live="polite" tabindex="-1"></div>
+
           <input type="hidden" name="access_key" value="2e4c8e9f-b816-426e-9ef3-3666fc298c40">
           <input type="hidden" name="subject" value="New mockup request from lukawebstudio.com">
           <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -812,8 +845,8 @@
             <label for="message">Message</label>
             <textarea id="message" name="message" placeholder="Tell us about your business and what you'd like your website to do." required></textarea>
           </div>
-          <button type="submit" class="btn btn-primary btn-block">Get my free mockup</button>
-          <p class="form-fine">We reply within 1–2 business days. See our <a href="privacy.html">Privacy Policy</a>.</p>
+          <button type="submit" class="btn btn-primary btn-block"><span class="spinner" aria-hidden="true"></span><span class="btn-label">Get my free mockup</span></button>
+          <p class="form-fine">We reply within 24 hours. See our <a href="privacy.html">Privacy Policy</a>.</p>
         </form>
       </div>
     </div>
@@ -845,6 +878,75 @@
     </div>
   </div>
 </footer>
+
+<script>
+  /* Contact form: sends to Web3Forms in the background, then clears the form and shows a message. */
+  (function () {
+    var form = document.getElementById('mockup-form');
+    if (!form) return;
+    var statusBox = document.getElementById('form-status');
+    var button = form.querySelector('button[type="submit"]');
+    var label = button.querySelector('.btn-label');
+    var defaultLabel = label.textContent;
+
+    var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+    var ALERT = '<svg viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>';
+
+    function showStatus(type, title, text) {
+      statusBox.className = 'form-status is-visible is-' + type;
+      statusBox.innerHTML =
+        '<span class="status-icon">' + (type === 'success' ? CHECK : ALERT) + '</span>' +
+        '<div><strong>' + title + '</strong><p>' + text + '</p></div>';
+      statusBox.focus({ preventScroll: true });
+      statusBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    function hideStatus() { statusBox.className = 'form-status'; statusBox.innerHTML = ''; }
+    function setLoading(on) {
+      button.classList.toggle('is-loading', on);
+      button.disabled = on;
+      label.textContent = on ? 'Sending…' : defaultLabel;
+    }
+
+    // Hide an old message as soon as someone starts filling the form again
+    form.addEventListener('input', function () {
+      if (statusBox.classList.contains('is-visible')) hideStatus();
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+
+      var data = Object.fromEntries(new FormData(form).entries());
+      setLoading(true);
+      hideStatus();
+
+      fetch(form.action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .then(function (res) {
+          return res.json().catch(function () { return {}; }).then(function (json) {
+            return { ok: res.status === 200 && json.success !== false, json: json };
+          });
+        })
+        .then(function (result) {
+          if (result.ok) {
+            form.reset();
+            showStatus('success', 'Message Sent Successfully!', "We'll be in touch within 24 hours.");
+          } else {
+            showStatus('error', "Your message didn't send.",
+              'Please try again, or email us at <a href="mailto:lukawebstudio@gmail.com">lukawebstudio@gmail.com</a>.');
+          }
+        })
+        .catch(function () {
+          showStatus('error', "Your message didn't send.",
+            'Check your internet connection and try again, or call <a href="tel:+15166473155">(516) 647-3155</a>.');
+        })
+        .finally(function () { setLoading(false); });
+    });
+  })();
+</script>
 
 </body>
 </html>
